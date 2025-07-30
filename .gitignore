@@ -8,5 +8,5 @@ test
 config.yaml
 main.py
 cli/
-model/
+model/old
 assets/
