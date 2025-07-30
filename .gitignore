@@ -1,0 +1,12 @@
+__pycache__/
+.venv/
+.env
+images/
+output/
+out/
+test
+config.yaml
+main.py
+cli/
+model/
+assets/
