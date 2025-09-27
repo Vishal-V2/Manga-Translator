@@ -81,11 +81,23 @@ class DeepseekApi:
     def _parse_json(self, text: str) -> dict:
         try:
             stripped_text = markdown.extract_markdown_codeblock(text)
-
-            return json.loads(stripped_text)
+            
+            # Clean up whitespace and find JSON start
+            cleaned_text = stripped_text.strip()
+            
+            # Try to fix common JSON formatting issues
+            if not cleaned_text.startswith('{'):
+                # Find the first { character
+                start_idx = cleaned_text.find('{')
+                if start_idx != -1:
+                    cleaned_text = cleaned_text[start_idx:]
+            
+            # Parse JSON directly without escaping newlines (they're valid in JSON strings)
+            return json.loads(cleaned_text)
         except json.JSONDecodeError as e:
             print("[JSON Decode Error] Invalid response format from Deepseek:\n", e)
             print("Raw content:\n", text)
+            print("Cleaned content:\n", cleaned_text if 'cleaned_text' in locals() else "N/A")
 
             return {}
     

@@ -95,10 +95,23 @@ class TypesettingProcess:
     def load_font(self):
         font_id = QFontDatabase.addApplicationFont(constants.CCVICTORYSPEECH_PATH)
         if font_id == -1:
-            print("Failed to load custom font, using default system font.")
+            print("Failed to load custom font, trying alternative comic fonts...")
+            # Try common comic/manga fonts that might be available
+            available_fonts = QFontDatabase.families()
+            comic_fonts = ["Comic Sans MS", "Anime Ace", "Manga Temple", "Arial Black", "Impact"]
+            
+            for font in comic_fonts:
+                if font in available_fonts:
+                    self.REGULAR_FONT = font
+                    print(f"Using alternative font: {font}")
+                    return
+            
+            # Fallback to system font
             self.REGULAR_FONT = QApplication.font().family()
+            print(f"Using system font: {self.REGULAR_FONT}")
         else:
             self.REGULAR_FONT = QFontDatabase.applicationFontFamilies(font_id)[0]
+            print(f"Successfully loaded custom font: {self.REGULAR_FONT}")
     
 
     def update_text_item(

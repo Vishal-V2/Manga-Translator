@@ -5,6 +5,15 @@ import sys
 import os
 from model.load_models import load_all_models
 from pipeline.manager.base import AutomaticTranslationBase
+from simple_lama_inpainting import SimpleLama
+
+class CleaningBase:
+    def __init__(self):
+        # initialize the inpainter ONCE
+        self.inpainter = SimpleLama()
+
+    def batch_cleaning(self, image_pil, image_mask):
+        return self.inpainter.inpaint(image_pil, image_mask)
 
 class MainWindow(QMainWindow):
     def __init__(self):
