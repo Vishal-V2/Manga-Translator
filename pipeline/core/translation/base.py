@@ -1,5 +1,6 @@
 from pipeline.core.translation.deepseek import DeepseekApi
 from pipeline.core.translation.gemini import GeminiApi
+from pipeline.core.translation.groq import GroqApi
 
 
 
@@ -22,6 +23,12 @@ class TranslationBase:
         deepseek_key = deepseek_config.get("api_key")
         if deepseek_key:
             self.apis["deepseek"] = DeepseekApi(deepseek_key, deepseek_config.get("model"))
+        
+        # Setup Groq API
+        groq_config = api_config.get("groq", {})
+        groq_key = groq_config.get("api_key")
+        if groq_key:
+            self.apis["groq"] = GroqApi(groq_key, groq_config.get("model"))
         
         print(f"Available APIs: {list(self.apis.keys())}")
         print(f"Primary API: {self.primary_api}")

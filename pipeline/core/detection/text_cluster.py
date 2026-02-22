@@ -6,8 +6,9 @@ from pipeline.core.detection import overlap
 
 
 class TextClusterDetection:
-    def __init__(self, model: YOLO):
+    def __init__(self, model: YOLO, threshold: float | None = None):
         self.model = model
+        self.threshold = threshold if threshold is not None else constants.TEXT_CLUSTER_THRESHOLD
     
 
     def _detect_single(self, SBdata: SpeechBubble) -> list[TextCluster]:
@@ -27,12 +28,27 @@ class TextClusterDetection:
 
         TCresult = self.model(SBdata.bounding_image)[0]
 
+        """
         if not TCresult.boxes:
-            return TCdata
+            # Fallback: create one cluster covering the whole bubble if nothing is detected
+            h, w = SBdata.bounding_image.shape[:2]
+            relative_pos = (
+                SBx_min, SBy_min,
+                SBx_min + w, SBy_min + h
+            )
+            TCdata.append(TextCluster(
+                position=relative_pos,
+                confidence=SBdata.confidence,
+                bounding_image=SBdata.bounding_image,
+                jp_text=None,
+                tr_text=None,
+            ))
+            return TCdata 
+        """
         
         for box in TCresult.boxes:
             TCconf = round(box.conf.item(), 2)
-            if TCconf < constants.TEXT_CLUSTER_THRESHOLD:
+            if TCconf < self.threshold:
                 continue
 
             TCx_min, TCy_min, TCx_max, TCy_max = map(int, box.xyxy.tolist()[0])
@@ -51,6 +67,20 @@ class TextClusterDetection:
                 tr_text = None,
             ))
         
+        # Fallback if threshold filtered everything
+        if not TCdata:
+            h, w = SBdata.bounding_image.shape[:2]
+            relative_pos = (
+                SBx_min, SBy_min,
+                SBx_min + w, SBy_min + h
+            )
+            TCdata.append(TextCluster(
+                position=relative_pos,
+                confidence=SBdata.confidence,
+                bounding_image=SBdata.bounding_image,
+                jp_text=None,
+                tr_text=None,
+            ))
         return TCdata
     
 
@@ -59,10 +89,8 @@ class TextClusterDetection:
 
         for SB in SBdata:
             TCdata = self._detect_single(SB)
-
-            if TCdata:
-                SB.text_clusters = TCdata
-                SBupdated_data.append(SB)
+            SB.text_clusters = TCdata or []
+            SBupdated_data.append(SB)
         
         SBupdated_data = overlap.overlap(SBupdated_data)
         

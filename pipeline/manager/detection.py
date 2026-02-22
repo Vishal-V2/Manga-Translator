@@ -13,8 +13,9 @@ import numpy as np
 class DetectionManager(QObject):
     data = Signal(list)
 
-    def __init__(self, api_config: dict, speech_bubble_model: YOLO, text_cluster_model: YOLO):
+    def __init__(self, detection_config: dict, speech_bubble_model: YOLO, text_cluster_model: YOLO):
         super().__init__()
+        self.detection_config = detection_config or {}
         self.speech_bubble_model = speech_bubble_model
         self.text_cluster_model = text_cluster_model
 
@@ -22,6 +23,7 @@ class DetectionManager(QObject):
     def start(self, image_cv2: np.ndarray):
         self.worker, self.run_in_thread = run_in_thread(
             DetectionWorker,
+            self.detection_config,
             self.speech_bubble_model,
             self.text_cluster_model,
             image_cv2,

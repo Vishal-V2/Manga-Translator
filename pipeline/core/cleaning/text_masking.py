@@ -5,7 +5,7 @@ from pipeline.core.box_data import TextCluster
 
 
 
-def apply_text_mask(inpainter: str, mask_canvas: np.ndarray, text_cluster_data: TextCluster) -> np.ndarray:
+def apply_text_mask(mask_canvas: np.ndarray, text_cluster_data: TextCluster) -> np.ndarray:
     text_cluster_image = text_cluster_data.bounding_image
     TCx_min, TCy_min, _, _ = text_cluster_data.position
 
@@ -26,17 +26,15 @@ def apply_text_mask(inpainter: str, mask_canvas: np.ndarray, text_cluster_data: 
         reshaped = np.array(contour, dtype=np.int32).reshape(-1, 1, 2)
         cv2.drawContours(mask_canvas, [reshaped], -1, (0, 0, 0), thickness=cv2.FILLED)
 
-    if inpainter == "lama":    
-        mask_canvas = cv2.bitwise_not(mask_canvas)
     return mask_canvas
 
 
-def batch_apply_text_mask(inpainter: str, mask_canvas: np.ndarray, text_clusters_data: list[TextCluster]) -> Image.Image:
+def batch_apply_text_mask(mask_canvas: np.ndarray, text_clusters_data: list[TextCluster]) -> Image.Image:
     image_np = mask_canvas
     for text_cluster_data in text_clusters_data:
         if text_cluster_data.bounding_image is None:
             continue
-        image_np = apply_text_mask(inpainter, mask_canvas, text_cluster_data)
+        image_np = apply_text_mask(image_np, text_cluster_data)
     
     image_mask_pil = Image.fromarray(image_np)
     image_mask_pil.save("output/image_mask.png")

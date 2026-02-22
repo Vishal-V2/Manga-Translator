@@ -6,8 +6,6 @@ from PIL import Image
 
 from pipeline.core.utility import convert_image
 from pipeline.core.cleaning import text_masking
-from pipeline.core.cleaning.migan_inpainter import MiganInpainter
-from pipeline.core.cleaning.lama_inpainter import LamaInpainter
 from pipeline.core.cleaning.base import CleaningBase
 from pipeline.core.box_data import TextCluster
 
@@ -39,7 +37,21 @@ class CleaningWorker(QObject):
     def _text_masking(self):
         self.inpainter = self.cleaning_config.get("model")
         self.mask_canvas = convert_image.blank_canvas(self.image_cv2)
-        self.image_mask = text_masking.batch_apply_text_mask(self.inpainter, self.mask_canvas, self.text_clusters_data)
+        mask_np = self.mask_canvas.copy()
+        for text_cluster_data in self.text_clusters_data:
+            if text_cluster_data.bounding_image is None:
+                continue
+            mask_np = text_masking.apply_text_mask(mask_np, text_cluster_data)
+        # SimpleLama/ONNX expect 255 where we want to inpaint.
+        # apply_text_mask currently draws text regions in black (0) on a white canvas (255),
+        # so we need to invert here so that text becomes 255 and background 0.
+        if not np.array_equal(mask_np, self.mask_canvas):
+            mask_np = 255 - mask_np
+        else:
+            # If no text was drawn, use an all-black mask (no inpaint)
+            mask_np = np.zeros_like(mask_np)
+        self.image_mask = Image.fromarray(mask_np)
+        self.image_mask.save("output/image_mask.png")
     
 
     def _text_cleaning(self):

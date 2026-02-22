@@ -12,13 +12,16 @@ def overlap(speech_bubbles_data: list[SpeechBubble]) -> list[SpeechBubble]:
         if intersection is None:
             continue
 
+        # Ensure we never remove all clusters from a bubble due to overlap pruning
         for c in list(box[0].text_clusters or []):
             if is_text_cluster_inside_intersection(c.position, intersection):
-                box[0].text_clusters.remove(c)
+                if box[0].text_clusters and len(box[0].text_clusters) > 1:
+                    box[0].text_clusters.remove(c)
 
         for c in list(box[1].text_clusters or []):
             if is_text_cluster_inside_intersection(c.position, intersection):
-                box[1].text_clusters.remove(c)
+                if box[1].text_clusters and len(box[1].text_clusters) > 1:
+                    box[1].text_clusters.remove(c)
 
     return speech_bubbles_data
 

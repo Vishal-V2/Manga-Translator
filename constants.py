@@ -8,6 +8,9 @@ DEFAULT_CONFIG = {
         },
         "deepseek": {
             "model": "deepseek-reasoner"
+        },
+        "groq": {
+            "model": "llama-3.1-70b-versatile"
         }
     },
     "detection_group": {
@@ -54,6 +57,12 @@ DEEPSEEK_MODELS_INFO = [
     "deepseek-reasoner: Designed for Chain-of-Thought (CoT) reasoning. Ideal for capturing nuance and emotional tone in complex dialogue translation."
 ]
 
+GROQ_MODELS_INFO = [
+    "llama-3.1-8b-instant: Fast, cost-efficient for short or bulk translations.",
+    "llama-3.1-70b-versatile: Strong general model for higher-quality translations.",
+    "mixtral-8x7b-32768: Mixture-of-Experts model with long context support."
+]
+
 CONFIDENCE_INFO = "Minimum confidence required to consider a detection valid. (0.1-0.9)"
 
 HONORIFICS_INFO = "Keep suffixes like -san, -chan, -sama, etc. untranslated."
@@ -87,6 +96,12 @@ DEEPSEEK_MODELS_LIST = [
     "deepseek-reasoner"
 ]
 
+GROQ_MODELS_LIST = [
+    "llama-3.1-8b-instant",
+    "llama-3.1-70b-versatile",
+    "mixtral-8x7b-32768"
+]
+
 FONTS_LIST = [
     "CCWildWords",
     "CCVictorySpeech"
@@ -102,8 +117,8 @@ CLEANING_MODEL = [
 FRAMELESS_CLASS_NAME = "frameless"
 
 # Detection
-SPEECH_BUBBLE_THRESHOLD = 0.70
-TEXT_CLUSTER_THRESHOLD = 0.70
+SPEECH_BUBBLE_THRESHOLD = 0.40
+TEXT_CLUSTER_THRESHOLD = 0.35
 
 # Typesetting core
 INITIAL_FONT_SIZE = 1000
