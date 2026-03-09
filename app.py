@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
         file_paths = [
             os.path.join(folder_path, f)
             for f in os.listdir(folder_path)
-            if os.path.isfile(os.path.join(folder_path, f)) and f.lower().endswith(('.png', '.jpg', '.jpeg'))
+            if os.path.isfile(os.path.join(folder_path, f)) and f.lower().endswith(('.png', '.jpg', '.jpeg' , '.webp'))
         ]
 
         self.ye.receive_selected_files.emit(file_paths)

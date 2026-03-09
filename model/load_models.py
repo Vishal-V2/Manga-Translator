@@ -1,8 +1,8 @@
 from ultralytics import YOLO
-from manga_ocr import MangaOcr
 import constants
 import logging
 import warnings
+from config.base import ConfigBase
 
 try:
     from transformers.utils import logging as hf_logging
@@ -27,13 +27,24 @@ except Exception:
 
 speech_bubble_model = None
 text_cluster_model = None
-manga_ocr = None
+ocr_engine = None
 
 def load_all_models():
-    global speech_bubble_model, text_cluster_model, manga_ocr
+    global speech_bubble_model, text_cluster_model, ocr_engine
     
     speech_bubble_model = YOLO(constants.SPEECH_BUBBLE_MODEL_PATH)
     text_cluster_model = YOLO(constants.TEXT_CLUSTER_MODEL_PATH)
-    manga_ocr = MangaOcr()
 
-    return speech_bubble_model, text_cluster_model, manga_ocr
+    config = ConfigBase()
+    recognition_config = config.recognition_config
+    selected_engine = recognition_config.get("ocr_engine", "manga_ocr")
+    ocr_language = recognition_config.get("ocr_language", "japanese")
+
+    if selected_engine == "easyocr":
+        from pipeline.core.recognition.easyocr_recognition import EasyOcrRecognition
+        ocr_engine = EasyOcrRecognition(language=ocr_language)
+    else:
+        from manga_ocr import MangaOcr
+        ocr_engine = MangaOcr()
+
+    return speech_bubble_model, text_cluster_model, ocr_engine

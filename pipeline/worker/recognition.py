@@ -1,9 +1,9 @@
 from PySide6.QtCore import (
     QObject, Signal, Slot
 )
-from manga_ocr import MangaOcr
 
 from pipeline.core.recognition.manga_ocr import TextRecognition
+from pipeline.core.recognition.easyocr_recognition import EasyOcrRecognition
 from pipeline.core.box_data import SpeechBubble
 
 
@@ -11,9 +11,13 @@ from pipeline.core.box_data import SpeechBubble
 class RecognitionWorker(QObject):
     finished = Signal(list)
 
-    def __init__(self, manga_ocr: MangaOcr, speech_bubbles_data: list[SpeechBubble]):
+    def __init__(self, ocr_engine, speech_bubbles_data: list[SpeechBubble]):
         super().__init__()
-        self.text_recogntion = TextRecognition(manga_ocr)
+        # ocr_engine is either a MangaOcr instance or an EasyOcrRecognition instance
+        if isinstance(ocr_engine, EasyOcrRecognition):
+            self.text_recognition_engine = ocr_engine
+        else:
+            self.text_recognition_engine = TextRecognition(ocr_engine)
         self.speech_bubbles_data = speech_bubbles_data
     
 
@@ -25,4 +29,4 @@ class RecognitionWorker(QObject):
     
 
     def _text_recognition(self):
-        self.speech_bubbles_data = self.text_recogntion.text_recognition(self.speech_bubbles_data)
+        self.speech_bubbles_data = self.text_recognition_engine.text_recognition(self.speech_bubbles_data)
