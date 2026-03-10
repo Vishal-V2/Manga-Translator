@@ -76,7 +76,7 @@ class SpeechBubbleDetection:
             if aspect < 0.15 or aspect > 6.0:
                 continue
             roi_mean = np.mean(gray[max(0, y):min(h, y + hh), max(0, x):min(w, x + ww)])
-            if roi_mean < 110:  # bubbles tend to be light
+            if roi_mean < 160:  # bubbles tend to be light
                 continue
             candidate = (x, y, x + ww, y + hh)
             # only add if not overlapping with existing YOLO bubbles too much

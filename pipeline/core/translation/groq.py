@@ -24,7 +24,7 @@ class GroqApi:
     
 
     def translate(self, jp_texts_dict: dict) -> dict:
-        prompt = constants.CUSTOM_PROMPT_V1 
+        prompt = constants.CUSTOM_PROMPT_V1
         jp_texts = json.dumps(jp_texts_dict, ensure_ascii=False, indent=4)
 
         try:
