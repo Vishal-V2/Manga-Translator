@@ -8,9 +8,6 @@ DEFAULT_CONFIG = {
         },
         "deepseek": {
             "model": "deepseek-reasoner"
-        },
-        "groq": {
-            "model": "llama-3.1-70b-versatile"
         }
     },
     "detection_group": {
@@ -23,10 +20,6 @@ DEFAULT_CONFIG = {
     },
     "cleaning_group": {
         "model": "lama"
-    },
-    "recognition_group": {
-        "ocr_engine": "manga_ocr",
-        "ocr_language": "japanese"
     },
     "translation_group": {
         "preserve_honorifics": {
@@ -59,12 +52,6 @@ GEMINI_MODELS_INFO = [
 DEEPSEEK_MODELS_INFO = [
     "deepseek-chat: General-purpose model for conversational and straightforward translations.",
     "deepseek-reasoner: Designed for Chain-of-Thought (CoT) reasoning. Ideal for capturing nuance and emotional tone in complex dialogue translation."
-]
-
-GROQ_MODELS_INFO = [
-    "llama-3.1-8b-instant: Fast, cost-efficient for short or bulk translations.",
-    "llama-3.1-70b-versatile: Strong general model for higher-quality translations.",
-    "mixtral-8x7b-32768: Mixture-of-Experts model with long context support."
 ]
 
 CONFIDENCE_INFO = "Minimum confidence required to consider a detection valid. (0.1-0.9)"
@@ -100,12 +87,6 @@ DEEPSEEK_MODELS_LIST = [
     "deepseek-reasoner"
 ]
 
-GROQ_MODELS_LIST = [
-    "llama-3.1-8b-instant",
-    "llama-3.1-70b-versatile",
-    "mixtral-8x7b-32768"
-]
-
 FONTS_LIST = [
     "CCWildWords",
     "CCVictorySpeech"
@@ -116,44 +97,20 @@ CLEANING_MODEL = [
     "migan"
 ]
 
-OCR_ENGINES = [
-    "manga_ocr",
-    "easyocr"
-]
-
-OCR_LANGUAGES = [
-    "japanese",
-    "chinese_simplified",
-    "chinese_traditional",
-    "korean"
-]
-
-OCR_ENGINES_INFO = [
-    "manga_ocr: Specialized Japanese manga OCR. Best accuracy for Japanese text.",
-    "easyocr: Multilingual OCR supporting Japanese, Chinese (simplified & traditional), and Korean."
-]
-
-OCR_LANGUAGES_INFO = [
-    "japanese: Japanese text recognition.",
-    "chinese_simplified: Simplified Chinese text recognition.",
-    "chinese_traditional: Traditional Chinese text recognition.",
-    "korean: Korean text recognition."
-]
-
 
 # Speech bubble
 FRAMELESS_CLASS_NAME = "frameless"
 
 # Detection
-SPEECH_BUBBLE_THRESHOLD = 0.40
-TEXT_CLUSTER_THRESHOLD = 0.35
+SPEECH_BUBBLE_THRESHOLD = 0.70
+TEXT_CLUSTER_THRESHOLD = 0.70
 
 # Typesetting core
 INITIAL_FONT_SIZE = 1000
 MINIMUM_FONT_SIZE = 5
 MAX_ITERATIONS = 30
-MIN_AREA_THRESH = 68
-MAX_AREA_THRESH = 76
+MIN_AREA_THRESH = 52
+MAX_AREA_THRESH = 56
 INCREASE_VALUE = 1.05
 DECREASE_VALUE = 0.95
 
@@ -211,7 +168,7 @@ By following these instructions, the translation should be accurate, natural, an
 
 CUSTOM_PROMPT_V1 = """
 Primary Goal
-Your task is to act as an expert manga / doujin translator. You will receive a nested dictionary containing Japanese text 
+Your task is to act as an expert manga translator. You will receive a nested dictionary containing Japanese text 
 snippets from a manga page. Your job is to translate the Japanese text (jp_text) into natural-sounding, 
 contextually accurate English and place it into the corresponding empty tr_text field. You must return the exact 
 same dictionary structure as the input, now with the translations filled in.
@@ -240,9 +197,6 @@ Holistic Context: Translate each jp_text entry individually, but critically use 
 input dictionary to understand the full context, character voices, and nuance of the scene. Treat the entire 
 structure as interconnected text from a single sequence.
 
-Additional Directives: Preserve themes of role reversal, femdom,pegging,futanari and femboys. Source material is primarily futanari
-or femdom doujins; capture these dynamics accurately.
-
 Natural Dialogue: Ensure the translated English reads like natural, flowing dialogue or narration. Avoid stiff, 
 overly literal translations. Infer the character's personality and tone from the Japanese text.
 
@@ -252,14 +206,8 @@ gendered speech, or character traits. Find appropriate English equivalents.
 Preserve Honorifics & Names: Keep Japanese honorifics (e.g., -san, -kun, -chan, -sensei) and romanized names as 
 they are. Do not translate them. (e.g., "Tamao-kun," not "Mr. Tamao").
 
-Preserve Intimate dialogue: Keep erotica and sexual tone of the charaters intact. Depending 
-on the context of the text recieved find more apt english terms and make them sound natural.
-
 Infer Subjects/Pronouns: Japanese often omits subjects. Infer the correct subject/pronoun (I, you, he, she, they) 
 from the context and include it in the English translation for clarity.
-
-Semantic Inference: Handle kanji-based wordplay where literal meanings differ from actual usage; infer intent from context and translate with the correct nuance.
-Example: otokonoko (男の娘, “male daughter”) → a feminine-presenting boy, often equated with a femboy, rather than a literal translation.
 
 Romanize Key Terms: Keep culturally specific or widely understood Japanese terms in romanized form 
 (e.g., onigiri, jujutsu, chakra, senpai). Use your judgment for what is common knowledge in manga communities.
@@ -282,7 +230,7 @@ Avoid putting output in json block, just in str with json like format
 
 CUSTOM_PROMPT_V2 = """
 System Persona
-You are mangazxc, an AI specializing in expert manga and hentai doujin localization. Your purpose is to translate Japanese manga and henati doujins
+You are mangazxc, an AI specializing in expert manga localization. Your purpose is to translate Japanese manga 
 text into natural, contextually rich, and culturally adapted English while perfectly preserving the required 
 data structure. You understand the nuances of dialogue, character voice, and the specific formatting needs of 
 scanlation projects.
