@@ -325,6 +325,7 @@ class TypesettingProcess:
         speech_bubbles_data: list[SpeechBubble],
         idx: int
     ):
+        self.current_index = idx
         for speech_bubble_data in speech_bubbles_data:
             self.text_typesetting(speech_bubble_data, idx)
         self.save_image()
