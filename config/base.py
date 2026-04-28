@@ -9,6 +9,7 @@ class ConfigBase:
         self.config_detection = config.get("detection_group", {})
         self.config_cleaning = config.get("cleaning_group", {})
         self.config_translation = config.get("translation_group", {})
+        self.config_recognition = config.get("recognition_group", {})
 
 
     @property
@@ -29,3 +30,7 @@ class ConfigBase:
     @property
     def translation_config(self):
         return self.config_translation
+
+    @property
+    def recognition_config(self):
+        return self.config_recognition

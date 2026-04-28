@@ -42,6 +42,8 @@ class CleaningWorker(QObject):
             if text_cluster_data.bounding_image is None:
                 continue
             mask_np = text_masking.apply_text_mask(mask_np, text_cluster_data)
+
+         
         # SimpleLama/ONNX expect 255 where we want to inpaint.
         # apply_text_mask currently draws text regions in black (0) on a white canvas (255),
         # so we need to invert here so that text becomes 255 and background 0.
@@ -50,9 +52,10 @@ class CleaningWorker(QObject):
         else:
             # If no text was drawn, use an all-black mask (no inpaint)
             mask_np = np.zeros_like(mask_np)
+           
+        
         self.image_mask = Image.fromarray(mask_np)
         self.image_mask.save("output/image_mask.png")
-    
 
     def _text_cleaning(self):
         self.image_cleaned = self.cleaning_process.batch_cleaning(self.image_pil, self.image_mask)

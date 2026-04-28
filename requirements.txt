@@ -12,3 +12,4 @@ PySide6_Essentials==6.9.1
 PyYAML==6.0.2
 simple_lama_inpainting==0.1.2
 ultralytics==8.3.158
+easyocr
