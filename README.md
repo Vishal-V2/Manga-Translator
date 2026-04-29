@@ -22,22 +22,22 @@ A powerful end-to-end manga translation tool that automatically detects speech b
 ### 1. Original Image
 Source manga page ready for processing.
 
-![Original Image Placeholder](https://via.placeholder.com/400x600?text=Original+Image)
+![Original Image](example/untranslated.png)
 
 ### 2. Speech Bubble Detection
 AI identifies and isolates all text regions in the image.
 
-![Speech Detection Placeholder](https://via.placeholder.com/400x600?text=Speech+Bubble+Detection)
+![Speech Detection](example/visualized_detection.png)
 
 ### 3. Image Cleanup
 Original text is removed while preserving artwork integrity.
 
-![Cleaned Image Placeholder](https://via.placeholder.com/400x600?text=Cleaned+Image)
+![Cleaned Image](example/image_cleaned.png)
 
 ### 4. Translated Output
 Final result with translated text professionally typeset.
 
-![Translated Image Placeholder](https://via.placeholder.com/400x600?text=Translated+Image)
+![Translated Image](example/page-0-translated.png)
 
 ## 📦 Requirements
 
